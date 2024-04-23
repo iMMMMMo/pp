@@ -1,43 +1,48 @@
-def hide_message_in_pixels(pixels, message):
-    # Konwertuj literę na binarny ciąg znaków
-    binary_message = bin(message)[2:].zfill(len(pixels) * 3)
+from PIL import Image
 
-    # Osadź wiadomość w pikselach
-    modified_pixels = []
-    for i in range(len(pixels)):
-        pixel = list(pixels[i])
-        for j in range(3):
-            pixel[j] = pixel[j] & ~1 | int(binary_message[i * 3 + j])
-        modified_pixels.append(tuple(pixel))
+def encode_message(image_path, message, num_bits):
+    img = Image.open(image_path)
+    pixels = list(img.getdata())
     
-    return modified_pixels
-
-def reveal_message_from_pixels(pixels):
-    # Odkryj ukrytą wiadomość z pikseli
-    binary_message = ''
-    for pixel in pixels:
-        for channel in pixel:
-            binary_message += str(channel & 1)
+    binary_message = bin(message)[2:].zfill(8)
     
-    # Konwertuj binarny ciąg znaków na liczbę całkowitą
-    return int(binary_message, 2)
+    pixels_needed = len(binary_message) // num_bits
+    if len(binary_message) % 3 != 0:
+        pixels_needed += 1
+    
+    for i in range(pixels_needed):
+        pixel = pixels[i]
+        modified_pixel = list(pixel)
+        
+        print(f"Piksel {i+1}. ", end = "")
+        print(f"({' '.join([bin(channel)[2:].zfill(8) for channel in pixel])}) - ", end= "")
+        
+        for j in range(num_bits):
+            if len(binary_message) > 0:
+                bit = binary_message[0]
+                modified_pixel[j] = modify_bit(pixel[j], bit)
+                binary_message = binary_message[1:]
+        
+        pixels[i] = tuple(modified_pixel)
+        
+        print(f"({' '.join([bin(channel)[2:].zfill(8) for channel in pixels[i]])})")
 
-# Przykładowe piksele
-pixels = [
-    (43, 205, 24),
-    (171, 204, 41),
-    (28, 231, 90)
-]
 
-# Przykładowa wiadomość do ukrycia (43H = 01000011B)
-message = 0b01000011
+    print("Zaszyfrowana wiadomość:", bin(message)[2:].zfill(8))
 
-# Ukryj wiadomość w pikselach
-modified_pixels = hide_message_in_pixels(pixels, message)
-print("Zmodyfikowane piksele po ukryciu wiadomości:")
-for pixel in modified_pixels:
-    print(pixel)
+    img.putdata(pixels)
+    img.save("encoded_image.png")
 
-# Odkryj wiadomość z pikseli
-revealed_message = reveal_message_from_pixels(modified_pixels)
-print("\nOdkryta wiadomość:", revealed_message)
+def modify_bit(value, bit):
+    mask = 0b11111110
+    if bit == "1":
+        return value | 1
+    else:
+        return value & mask
+
+image_path = "example.png"
+
+message = 0b0100100101010100010101111111
+
+num_bits = 3
+encode_message(image_path, message, num_bits)
