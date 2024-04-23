@@ -1,0 +1,6 @@
+sample0.txt : zawiera język naturalny
+sample1.txt : zawiera język naturalny
+sample2.txt : zawiera język naturalny
+sample3.txt : zawiera język naturalny
+sample4.txt : nie zawiera języka naturalnego (wartości entropii warunkowej rzędu 2, 3, 4 i 5 są bardzo zbliżone do wartości entropii warunkowej rzędu 1, co nie pasuje do języków naturalnych, które mają tendencję zauważalnego zmniejszania wartości entropii wraz ze wzrostem rzędu)
+sample5.txt : zawiera język naturalny

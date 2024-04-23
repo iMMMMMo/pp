@@ -1,0 +1,49 @@
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+def cbc_encrypt(plaintext, key, iv):
+    cipher = AES.new(key, AES.MODE_ECB)
+    ciphertext = b''
+    previous_block = iv
+    
+    for i in range(0, len(plaintext), 16):
+        block = plaintext[i:i+16]
+        
+        block = bytes(x ^ y for x, y in zip(block, previous_block))
+        
+        encrypted_block = cipher.encrypt(block)
+        
+        ciphertext += encrypted_block
+        
+        previous_block = encrypted_block
+    
+    return ciphertext
+
+def cbc_decrypt(ciphertext, key, iv):
+    cipher = AES.new(key, AES.MODE_ECB)
+    plaintext = b''
+    previous_block = iv
+    
+    for i in range(0, len(ciphertext), 16):
+        block = ciphertext[i:i+16]
+        
+        decrypted_block = cipher.decrypt(block)
+        
+        decrypted_block = bytes(x ^ y for x, y in zip(decrypted_block, previous_block))
+        
+        plaintext += decrypted_block
+        
+        previous_block = block
+    
+    return plaintext
+
+plaintext = b"Politchnika Poznanska"
+key = get_random_bytes(16)
+iv = get_random_bytes(16)
+
+ciphertext = cbc_encrypt(pad(plaintext, AES.block_size), key, iv)
+print("CBC Encrypted:", ciphertext)
+
+decrypted_text = unpad(cbc_decrypt(ciphertext, key, iv), AES.block_size)
+print("CBC Decrypted:", decrypted_text.decode())
