@@ -2,13 +2,14 @@ import bitarray
 import pickle
 import os
 
-def create(frequencies, byte_size):
+def create(frequencies):
     code = {}
+    byte_size = 6
     i = 0
     for char in sorted(frequencies.keys()):
         code[char] = format(i, 'b').zfill(byte_size)
         i += 1
-    return code
+    return code, byte_size
 
 def encode(text, code):
     encoded_text = bitarray.bitarray()
@@ -57,16 +58,13 @@ for file in files:
 
     print(f"File {file}:")
     
-    for byte_size in range(8, 0, -1):
-        code = create(frequencies, byte_size)
-        encoded_text = encode(text, code)
-        save(code, encoded_text, os.path.join("encoded_data", file + f"_byte_size_{byte_size}.bin"))
-        loaded_code, loaded_encoded_text = load(os.path.join("encoded_data", file + f"_byte_size_{byte_size}.bin"))
-        decoded_text = decode(loaded_encoded_text, loaded_code)
-        # print(f"Original text:", text)
-        # print(f"Decoded text:", decoded_text)
-        print(f"Byte Size: {byte_size}:", text == decoded_text, end="")
-        if not text == decoded_text or byte_size == 1:
-            print(f"\nCompression ratio: {len(text)*8 / len(encoded_text)}")
-            break  
+    code, byte_size = create(frequencies)
+    encoded_text = encode(text, code)
+    save(code, encoded_text, os.path.join("encoded_data", file + f"_byte_size_{byte_size}.bin"))
+    loaded_code, loaded_encoded_text = load(os.path.join("encoded_data", file + f"_byte_size_{byte_size}.bin"))
+    decoded_text = decode(loaded_encoded_text, loaded_code)
+    print(f"Byte Size: {byte_size}:", text == decoded_text, end="")
+    if not text == decoded_text:
+        print(f"\nCompression ratio: {len(text) * 8 / len(encoded_text)}")
+    else:
         print()
