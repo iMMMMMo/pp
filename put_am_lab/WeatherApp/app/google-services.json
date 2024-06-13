@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "947025724667",
+    "project_id": "weatherapp-2115",
+    "storage_bucket": "weatherapp-2115.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:947025724667:android:35e8622d85b75f9ae6dc5e",
+        "android_client_info": {
+          "package_name": "edu.put.weatherapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhKfBdt0-dWs8ZdzjNUHHP1nYn3ABubWE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
