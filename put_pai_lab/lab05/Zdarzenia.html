@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="utf-8" />
+    <title>jQuery Zdarzenia</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script>
+        function edit() {
+            var row = $(this);
+            row.html('<input id="edit" value="' + row.text() + '">');
+
+            $('#edit').blur(function () {
+                row.text($(this).val());
+                row.one('click', edit);
+            }).focus();
+        }
+
+        $(function () {
+            $('td').one('click', edit);
+        });
+    </script>
+</head>
+<body>
+    <table>
+        <tr><td>Wlazł</td></tr>
+        <tr><td>kotek</td></tr>
+        <tr><td>na</td></tr>
+        <tr><td>...</td></tr>
+    </table>
+</body>
+</html>

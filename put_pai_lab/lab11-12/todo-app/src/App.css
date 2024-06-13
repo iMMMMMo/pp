@@ -1,0 +1,20 @@
+.app {
+  text-align: center;
+}
+
+.app h1 {
+  margin-bottom: 20px;
+}
+
+.app form {
+  margin-bottom: 20px;
+}
+
+.app ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.app li {
+  margin: 10px 0;
+}

@@ -1,0 +1,37 @@
+1. Do czego służą poszczególne warstwy architektury MVC i jak są połączone?
+- Model: Reprezentuje dane aplikacji i logikę biznesową. Modele są odpowiedzialne za pobieranie, przechowywanie i przetwarzanie danych.
+
+- View: Odpowiada za prezentację danych użytkownikowi. Widoki renderują interfejs użytkownika na podstawie danych dostarczonych przez kontroler.
+
+- Controller: Obsługuje żądania użytkownika, manipuluje modelem i zwraca odpowiedni widok. Kontrolery odbierają dane od użytkowników, przetwarzają je (przez modele) i wybierają widoki do renderowania odpowiedzi.
+
+- Połączenie: Kontroler odbiera żądania HTTP i współpracuje z modelem w celu uzyskania danych, następnie przekazuje te dane do widoku, który renderuje odpowiedź dla użytkownika.
+
+2. Jakie są konwencje nazewnictwa dla:
+(i) modeli: Pojedyncze formy rzeczowników, np. Movie, Product.
+
+(ii) kontrolerów: Nazwy kontrolerów kończą się na Controller, np. MoviesController, HomeController.
+
+(iii) akcji kontrolera: Czasowniki lub frazy opisujące operację, np. Index, Create, Edit, Delete.
+
+(iv) widoków: Nazwy odpowiadające akcjom kontrolera, np. Index.cshtml, Create.cshtml.
+
+(v) folderów widoków: Nazwy kontrolerów bez Controller, np. Movies, Home.
+
+3. Jak dane przekazywane są z kontrolerów do widoków (podaj 2 opcje)?
+Poprzez ViewData: ViewData["Message"] = "Hello, World!"; return View();
+
+Poprzez Model: var model = new Movie { Title = "Inception" }; return View(model);
+
+4. Jak mapowane są URLs na akcje kontrolerów?
+URLs są mapowane na akcje kontrolerów za pomocą routingu. Domyślne mapowanie jest określone w pliku Program.cs lub Startup.cs: app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
+
+5. Jak ograniczać akcje kontrolera tak, by były uruchamiane tylko z użyciem wskazanych typów zapytań HTTP (np. ograniczenie do HTTP POST)?
+Używając atrybutów, np. [HttpPost], [HttpGet]: [HttpPost] public IActionResult Create(Movie movie) { // Akcja dostępna tylko dla żądań POST }
+
+6. Gdzie zdefiniowana jest walidacja danych i jak realizowana jest w widokach i kontrolerach?
+Walidacja danych jest zdefiniowana w modelach przy użyciu atrybutów danych, np. [Required], [StringLength]: public class Movie { [Required] public string Title { get; set; } [DataType(DataType.Date)] public DateTime ReleaseDate { get; set; } [Range(1, 100)] public decimal Price { get; set; } }
+
+Realizacja w widokach: Pomocnicy HTML do wyświetlania komunikatów walidacyjnych, np. Html.ValidationMessageFor: <input asp-for="Title" class="form-control" /> <span asp-validation-for="Title" class="text-danger"></span>
+
+Realizacja w kontrolerach: Sprawdzanie stanu modelu i odpowiednie reagowanie: if (ModelState.IsValid) { // Zapisz dane do bazy } else { return View(movie); }
